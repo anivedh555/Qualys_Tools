@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Qualys Vulnerability Deduplicator</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background: #1a1f2e;
+      border: 1px solid #2d3748;
+      border-radius: 12px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 560px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #f7fafc;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: #718096;
+      margin-bottom: 2rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #2d3748;
+      border: 1px solid #4a5568;
+      border-radius: 6px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.75rem;
+      color: #90cdf4;
+      margin-bottom: 2rem;
+    }
+
+    .upload-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .upload-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #a0aec0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+
+    .upload-box {
+      border: 2px dashed #2d3748;
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      position: relative;
+    }
+
+    .upload-box:hover { border-color: #4299e1; }
+
+    .upload-box input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+
+    .upload-hint {
+      font-size: 0.8rem;
+      color: #718096;
+    }
+
+    .file-name {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: #68d391;
+      display: none;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.75rem;
+      background: #3182ce;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover { background: #2b6cb0; }
+
+    .flash {
+      background: #742a2a;
+      border: 1px solid #fc8181;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      color: #feb2b2;
+      margin-bottom: 1.25rem;
+    }
+
+    .info {
+      margin-top: 1.5rem;
+      font-size: 0.78rem;
+      color: #4a5568;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Vulnerability Deduplicator</h1>
+    <p class="subtitle">Remove previously reported vulnerabilities from your current month's Qualys export.</p>
+    <span class="badge">Match key: QID + DNS (Hostname)</span>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST" action="/deduplicate" enctype="multipart/form-data" id="dedup-form">
+      <div class="upload-group">
+        <div>
+          <label class="upload-label">Previous Month Export</label>
+          <div class="upload-box">
+            <span class="upload-icon">📂</span>
+            <span class="upload-hint">Click to select CSV</span>
+            <input type="file" name="prev_file" accept=".csv" id="prev_input" required />
+          </div>
+          <div class="file-name" id="prev_name"></div>
+        </div>
+        <div>
+          <label class="upload-label">Current Month Export</label>
+          <div class="upload-box">
+            <span class="upload-icon">📂</span>
+            <span class="upload-hint">Click to select CSV</span>
+            <input type="file" name="curr_file" accept=".csv" id="curr_input" required />
+          </div>
+          <div class="file-name" id="curr_name"></div>
+        </div>
+      </div>
+      <button type="submit" class="btn">Deduplicate</button>
+    </form>
+
+    <p class="info">Files are processed in-memory and never stored on disk.</p>
+  </div>
+
+  <script>
+    function wireFileInput(inputId, nameId) {
+      document.getElementById(inputId).addEventListener('change', function() {
+        const el = document.getElementById(nameId);
+        if (this.files.length) {
+          el.textContent = this.files[0].name;
+          el.style.display = 'block';
+        }
+      });
+    }
+    wireFileInput('prev_input', 'prev_name');
+    wireFileInput('curr_input', 'curr_name');
+  </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deduplication Result</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background: #1a1f2e;
+      border: 1px solid #2d3748;
+      border-radius: 12px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #f7fafc;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: #718096;
+      margin-bottom: 2rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-box {
+      background: #0f1117;
+      border: 1px solid #2d3748;
+      border-radius: 10px;
+      padding: 1rem 0.75rem;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: #718096;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.2rem;
+      display: block;
+    }
+
+    .stat-box.total .stat-value   { color: #90cdf4; }
+    .stat-box.removed .stat-value { color: #fc8181; }
+    .stat-box.new .stat-value     { color: #68d391; }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: background 0.2s;
+    }
+
+    .btn-primary {
+      background: #38a169;
+      color: #fff;
+      margin-bottom: 0.75rem;
+      width: 100%;
+    }
+
+    .btn-primary:hover { background: #2f855a; }
+
+    .btn-secondary {
+      background: transparent;
+      color: #a0aec0;
+      border: 1px solid #2d3748;
+      width: 100%;
+    }
+
+    .btn-secondary:hover { background: #2d3748; color: #e2e8f0; }
+
+    .actions { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .note {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: #4a5568;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Deduplication Complete</h1>
+    <p class="subtitle">Here's a summary of what was found.</p>
+
+    <div class="stats">
+      <div class="stat-box total">
+        <span class="stat-value">{{ total }}</span>
+        <span class="stat-label">Current Month</span>
+      </div>
+      <div class="stat-box removed">
+        <span class="stat-value">{{ removed }}</span>
+        <span class="stat-label">Duplicates Removed</span>
+      </div>
+      <div class="stat-box new">
+        <span class="stat-value">{{ remaining }}</span>
+        <span class="stat-label">New / Unique</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <p class="note" style="margin-top:0; margin-bottom:0.25rem;">
+        To download, re-upload both files below and click Download.
+      </p>
+      <form method="POST" action="/download" enctype="multipart/form-data">
+        <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:0.75rem; text-align:left;">
+          <label style="font-size:0.78rem; color:#718096;">Previous month CSV</label>
+          <input type="file" name="prev_file" accept=".csv" required
+            style="font-size:0.8rem; color:#a0aec0; background:#0f1117; border:1px solid #2d3748; border-radius:6px; padding:0.4rem;" />
+          <label style="font-size:0.78rem; color:#718096;">Current month CSV</label>
+          <input type="file" name="curr_file" accept=".csv" required
+            style="font-size:0.8rem; color:#a0aec0; background:#0f1117; border:1px solid #2d3748; border-radius:6px; padding:0.4rem;" />
+        </div>
+        <button type="submit" class="btn btn-primary">Download Deduplicated CSV</button>
+      </form>
+      <a href="/" class="btn btn-secondary">Start Over</a>
+    </div>
+
+    <p class="note">Match key: QID + DNS (Hostname) &mdash; case-insensitive</p>
+  </div>
+</body>
+</html>
