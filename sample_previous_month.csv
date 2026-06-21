@@ -1,0 +1,11 @@
+QID,IP,DNS,Port,Protocol,Severity,Title,CVE ID
+38173,10.0.0.1,webserver01.corp.local,443,TCP,4,SSL Certificate - Self-Signed Certificate,CVE-2022-1234
+38173,10.0.0.2,dbserver01.corp.local,443,TCP,4,SSL Certificate - Self-Signed Certificate,CVE-2022-1234
+105612,10.0.0.1,webserver01.corp.local,80,TCP,5,Apache HTTP Server Remote Code Execution,CVE-2021-41773
+105612,10.0.0.3,appserver01.corp.local,80,TCP,5,Apache HTTP Server Remote Code Execution,CVE-2021-41773
+91788,10.0.0.4,fileserver01.corp.local,445,TCP,5,MS17-010: Microsoft Windows SMB Remote Code Execution,CVE-2017-0144
+70000,10.0.0.2,dbserver01.corp.local,3306,TCP,3,MySQL Weak Password Policy Detected,
+70001,10.0.0.5,devbox01.corp.local,22,TCP,2,SSH Protocol Version 1 Supported,
+38600,10.0.0.6,printer01.corp.local,80,TCP,1,Web Server HTTP Trace/Track Method Allowed,
+45017,10.0.0.1,webserver01.corp.local,443,TCP,3,TLS/SSL Server Supports RC4 Cipher Algorithms,CVE-2013-2566
+45017,10.0.0.7,vpn01.corp.local,443,TCP,3,TLS/SSL Server Supports RC4 Cipher Algorithms,CVE-2013-2566
